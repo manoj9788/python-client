@@ -32,3 +32,27 @@ class TestWebDriverKeyboard(object):
             appium_command('/session/1234567890/appium/device/hide_keyboard')
         )
         assert isinstance(driver.hide_keyboard(), WebDriver)
+
+    @httpretty.activate
+    def test_press_keycode(self):
+        driver = android_w3c_driver()
+        httpretty.register_uri(
+            httpretty.POST,
+            appium_command('/session/1234567890/appium/device/press_keycode'),
+            body='{"value": "86"}'
+        )
+        driver.press_keycode('86')
+        d = get_httpretty_request_body((httpretty.last_request()))
+        assert d['keycode'] == '86'
+
+    @httpretty.activate
+    def test_long_press_keycode(self):
+        driver = android_w3c_driver()
+        httpretty.register_uri(
+            httpretty.POST,
+            appium_command('/session/1234567890/appium/device/long_press_keycode'),
+            body='{"value": "86"}'
+        )
+        driver.long_press_keycode('86')
+        d = get_httpretty_request_body((httpretty.last_request()))
+        assert d['keycode'] == '86'
